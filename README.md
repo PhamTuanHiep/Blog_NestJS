@@ -25,6 +25,9 @@
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+create migration: npm run migration:generate db/migrations/<deacescrip-action>
+VD: npm run migration:generate db/migrations/add_email_column_to_user_table
+update on DB: npm run migration:run
 
 ## Project setup
 
@@ -83,4 +86,5 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
 # Blog_NestJS
