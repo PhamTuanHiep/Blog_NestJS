@@ -6,11 +6,14 @@ import { User } from 'src/entities/users.entity';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<User> {
@@ -22,6 +25,7 @@ export class AuthService {
       password: hashPassword,
     });
   }
+
   async login(loginUserDto: LoginUserDto): Promise<any> {
     const user = await this.userRepository.findOne({
       where: {
@@ -46,7 +50,7 @@ export class AuthService {
   async refreshToken(refresh_token: string): Promise<any> {
     try {
       const verify = await this.jwtService.verifyAsync(refresh_token, {
-        secret: '123456',
+        secret: this.configService.get<string>('SECRET'),
       });
       console.log('verify:', verify);
       const checkExistToken = await this.userRepository.findOneBy({
@@ -73,8 +77,8 @@ export class AuthService {
   private async generateToken(payload: { id: number; email: string }) {
     const access_token = await this.jwtService.signAsync(payload);
     const refresh_token = await this.jwtService.signAsync(payload, {
-      secret: '123456',
-      expiresIn: '1d',
+      secret: this.configService.get<string>('SECRET'),
+      expiresIn: this.configService.get<string>('EXP_IN_REFRESH_TOKEN'),
     });
     await this.userRepository.update(
       { email: payload.email },
