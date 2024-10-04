@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -14,6 +15,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateResult } from 'typeorm';
+import { FilterUserDto } from './dto/filter-user.dto';
 
 @Controller('users')
 export class UserController {
@@ -21,8 +23,9 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  findAll(@Query() query: FilterUserDto): Promise<User[]> {
+    console.log(query);
+    return this.userService.findAll(query);
   }
 
   @UseGuards(AuthGuard)

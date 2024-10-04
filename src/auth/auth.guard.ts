@@ -19,9 +19,6 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     //chuyển đổi ngữ cảnh hiện tại sang HTTP context và lấy đối tượng request của yêu cầu HTTP.
     const token = this.extractTokenFromHeader(request);
-    console.log('request:', request);
-    console.log('token:', token);
-
     if (!token) {
       throw new UnauthorizedException(); //401
     }
@@ -29,7 +26,6 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>('SECRET'),
       });
-      console.log('payload:', payload);
       //Dữ liệu payload từ token sau khi được giải mã sẽ được gán vào request['user_data']
       request['user_data'] = payload;
     } catch {
@@ -44,9 +40,6 @@ export class AuthGuard implements CanActivate {
     const [type, token] = request.headers.authorization
       ? request.headers.authorization.split(' ')
       : [];
-    console.log('type:', type);
-    console.log('token-extractTokenFromHeader:', token);
-
     return type === 'Bearer' ? token : undefined;
   }
 }
