@@ -23,14 +23,17 @@ export class UserService {
     //res: Một mảng chứa danh sách các bản ghi phù hợp với điều kiện tìm kiếm.
     //total: Tổng số bản ghi phù hợp với điều kiện (số lượng toàn bộ bản ghi không phụ thuộc vào take và skip)
     const [res, total] = await this.userRepository.findAndCount({
+      //Like tìm kiếm dựa trên mẫu chuỗi.
+      //%: Là ký tự đại diện trong SQL.
+      //'%keyword%' có nghĩa là tìm kiếm bất kỳ chuỗi nào có chứa keyword ở bất kỳ vị trí nào trong chuỗi.
       where: [
         { first_name: Like('%' + keyword + '%') },
         { last_name: Like('%' + keyword + '%') },
         { email: Like('%' + keyword + '%') },
       ],
       order: { created_at: 'DESC' }, // Descending-giảm dần
-      take: items_per_page, //lấy bao nhiêu item trên 1 page
-      skip: skip,
+      take: items_per_page, //số lượng bản ghi tối đa sẽ được trả về cho mỗi lần truy vấn
+      skip: skip, //số lượng bản ghi sẽ bỏ qua khi truy vấn
       select: [
         'id',
         'first_name',
