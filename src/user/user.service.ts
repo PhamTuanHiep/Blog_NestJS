@@ -77,4 +77,8 @@ export class UserService {
     //DeleteResult chua thông tin về kết quả của quá trình xóa trong cơ sở dữ liệu.
     return await this.userRepository.delete(id);
   }
+
+  async updateAvatar(id: number, avatar: string): Promise<UpdateResult> {
+    return await this.userRepository.update(id, { avatar });
+  }
 }
